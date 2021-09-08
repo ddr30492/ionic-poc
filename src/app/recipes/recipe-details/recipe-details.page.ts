@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { Recipe } from '../recipes.model';
 import { RecipesService } from '../recipes.service';
 
@@ -13,7 +14,11 @@ export class RecipeDetailsPage implements OnInit {
   loadedRecipe: Recipe;
 
   // here we are using agular defaul redirect service for activated route
-  constructor(private activatedRoute: ActivatedRoute, private recipeServices: RecipesService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private recipeServices: RecipesService,
+    private router: Router,
+    private alertController: AlertController) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(paramMap => {
@@ -25,4 +30,24 @@ export class RecipeDetailsPage implements OnInit {
     });
   }
 
+  onDeleteRecipe(){
+    this.alertController.create({
+      header: 'Are you sure?',
+      message: 'You want to delete this recipe?',
+      buttons:[{
+        text: 'Cancel',
+        role: 'cancel'
+      },
+      {
+        text: 'Delete',
+        handler: () => {
+          this.recipeServices.deleteRecipe(this.loadedRecipe.id);
+          this.router.navigate(['/recipes']);
+        }
+      }
+    ]
+    }).then(alertEle => {
+      alertEle.present();
+    });
+  }
 }

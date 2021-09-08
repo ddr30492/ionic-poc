@@ -32,4 +32,9 @@ export class RecipesService {
       ...this.recipes.find(recipe => recipe.id === recipeId)
     };
   }
+
+  //delete single recipe from recipe detail page
+  deleteRecipe(recipeId: string){
+    this.recipes = this.recipes.filter(recipe => recipe.id !== recipeId);
+  }
 }
